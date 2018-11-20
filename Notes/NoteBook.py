@@ -1,19 +1,7 @@
 __author__ ='Burik Sergey'
+
 from tkinter import *
 from tkinter import filedialog as fd
-
-# file = open('file.txt','w') 
-
-# def opener():
-# 	f = open('file.txt') 	
-# 	#text is a Text widget 
-# 	text.insert(1.0, f.read()) 
-
-
-# def saver():
-# 	letter = text.get(1.0, END)
-# 	f = open('file.txt', "w")
-# 	f.write(letter)
 
 def insertText():
     file_name = fd.askopenfilename()
@@ -46,8 +34,6 @@ text.pack()
 frame = Frame()
 frame.pack()
  
-# b_delete = Button(frame, text="Удалить", command=deleteText)
-# b_delete.pack(side=LEFT)
  
 label = Label(text='Created by Burik Sergey')
 label.pack()
