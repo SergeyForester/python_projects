@@ -73,7 +73,6 @@ class MainWindow(GridLayout):
         data = data_p.parse_phrase(phrase)
 
         if len(data):
-            
 
             for element in self.layout.children:
                 print(element)
