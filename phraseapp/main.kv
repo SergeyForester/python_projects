@@ -1,0 +1,52 @@
+#: import MainWindow main.MainWindow
+#: import History main.History
+
+ScreenManagement:
+    MainWindowScreen:
+    HistoryScreen:
+
+
+<MainWindowScreen>:
+    name:"main"
+
+    GridLayout:
+        cols:1
+
+        TextInput:
+            id: phrase_field
+            size_hint: 1.0, 0.3
+            hint_text: "Enter A Word or A Phrase"
+
+        Button:
+            id: phrase_btn
+            size_hint: 1.0, 0.3
+            text: "Find"
+            background_color: 62 / 255.0, 204/ 255.0, 237/ 255.0, 1.0
+            on_press:
+                MainWindow().find_phrase(phrase_field.text)
+
+        MainWindow:
+
+        Button:
+            text:"History"
+            size_hint: 1.0, 0.1
+            background_color: 62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0
+            on_release:
+                app.root.current = "history"
+                root.manager.transition.direction = "left"
+
+
+<HistoryScreen>:
+    name: "history"
+
+    GridLayout:
+        cols:1
+
+        History:
+
+        Button:
+            text:"back"
+            background_color: 62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0
+            on_release:
+                app.root.current = "main"
+                root.manager.transition.direction = "right"
