@@ -89,7 +89,8 @@ class MainWindow(GridLayout):
             for element in self.layout.children:
                 print(element)
 
-            db.add_note(phrase, data)
+            db.add_note(phrase, data)  # add to db
+            History().load_history_list()  # and update the list of history
 
         else:
             self.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
@@ -98,14 +99,14 @@ class MainWindow(GridLayout):
 class History(GridLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+        print('History().__init__')
         self.cols = 1
 
         self.layout = GridLayout(cols=1, size_hint_y=None)
         # Make sure the height is such that there is something to scroll.
         self.layout.bind(minimum_height=self.layout.setter('height'))
 
-        self.scroll = ScrollView(size_hint=(1, None), size=(Window.width, 270))
+        self.scroll = ScrollView(size_hint=(1, None), size=(Window.width, Window.height * 0.60))
         self.scroll.add_widget(self.layout)
 
         self.add_widget(self.scroll)
@@ -113,36 +114,47 @@ class History(GridLayout):
         self.load_history_list()
 
     def load_history_list(self):
+        print('load_history_list 1')
+
         data = db.get_history()
 
+        # cleaning list of history
+        for element in self.layout.children:
+            print('deleting load_history_list ->', element)
+            self.layout.remove_widget(element)
+        print('load_history_list 2')
 
         if len(data):
-
-            for element in self.layout.children:
-                print(element)
-                self.layout.remove_widget(element)
-
+            print(len(data))
             for el in data:
-                print(el)
+                print('->', el)
                 btn = WrappedButton(text=str(el['title']), size_hint_y=None,
                                     background_color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0],
                                     font_size=20, font_name='Arial')
 
-                dropdown = DropDown()
+                dropdown = DropDown(size_hint=(1.0, None))
+                dropdown.dismiss()
                 for sentence in el['data']:
-                    dropdown.add_widget(WrappedButton(text=str(el['title']), size_hint_y=None,
-                                                      background_color=[235 / 255.0, 107 / 255.0, 52 / 255.0, 1.0],
+                    dropdown.add_widget(WrappedButton(text=str(sentence), size_hint_y=None,
+                                                      background_color=[224 / 225.0, 224 / 225.0, 224 / 255.0, 1.0],
                                                       font_size=20, font_name='Arial',
-                                                      on_press=partial(sound.pronounce, el)))
+                                                      on_press=partial(sound.pronounce, sentence)))
 
-                btn.on_release = dropdown.open
+                btn.bind(on_release=dropdown.open)
                 self.layout.add_widget(btn)
+                self.layout.add_widget(WrappedButton(text='delete', size_hint_x=0.1, size_hint_y=None,
+                                                     background_color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0],
+                                                     font_size=15, font_name='Arial',
+                                                     on_release=partial(self.delete_from_history, el['title'])))
+                self.layout.add_widget(dropdown)
 
-            for element in self.layout.children:
-                print(element)
 
         else:
             self.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
+
+    def delete_from_history(self, title, *args):
+        db.delete_request(title)
+        self.load_history_list()
 
 
 kv = Builder.load_file("main.kv")

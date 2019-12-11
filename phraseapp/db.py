@@ -20,3 +20,7 @@ def add_note(phrase, data):
         return
 
     print('Rejected')
+
+def delete_request(title):
+    if title:
+        table.remove({'title':title})
