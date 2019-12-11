@@ -27,43 +27,16 @@ Window.clearcolor = (1, 1, 1, 1)
 
 
 class MainWindowScreen(Screen):
-    pass
-
-
-class HistoryScreen(Screen):
-    pass
-
-
-class ScreenManagement(ScreenManager):
-    pass
-
-
-class WrappedButton(Button):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.bind(
-            width=lambda *x:
-            self.setter('text_size')(self, (self.width, None)),
-            texture_size=lambda *x: self.setter('height')(self, self.texture_size[1] + 20))
-
-
-class MainWindow(GridLayout):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-        self.cols = 1
-
+        super(MainWindowScreen, self).__init__(**kwargs)
         self.layout = GridLayout(cols=1, size_hint_y=None)
         # Make sure the height is such that there is something to scroll.
         self.layout.bind(minimum_height=self.layout.setter('height'))
 
-        self.scroll = ScrollView(size_hint=(1, None), size=(Window.width, 270))
+        self.scroll = ScrollView(size_hint=(1, None), size=(Window.width, Window.height * 0.60))
         self.scroll.add_widget(self.layout)
 
         self.add_widget(self.scroll)
-
-        self.add_widget(
-            Label(text='Find Phrase App', color=[0, 0, 0, 1], size_hint=(1.0, 0.05), bold=True))
 
     def find_phrase(self, phrase):
         print(phrase)
@@ -90,17 +63,17 @@ class MainWindow(GridLayout):
                 print(element)
 
             db.add_note(phrase, data)  # add to db
-            History().load_history_list()  # and update the list of history
+            HistoryScreen().load_history_list()  # and update the list of history
 
         else:
-            self.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
+            self.layout.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
 
 
-class History(GridLayout):
+class HistoryScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(HistoryScreen, self).__init__(**kwargs)
+
         print('History().__init__')
-        self.cols = 1
 
         self.layout = GridLayout(cols=1, size_hint_y=None)
         # Make sure the height is such that there is something to scroll.
@@ -122,6 +95,7 @@ class History(GridLayout):
         for element in self.layout.children:
             print('deleting load_history_list ->', element)
             self.layout.remove_widget(element)
+
         print('load_history_list 2')
 
         if len(data):
@@ -150,11 +124,24 @@ class History(GridLayout):
 
 
         else:
-            self.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
+            self.layout.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
 
     def delete_from_history(self, title, *args):
         db.delete_request(title)
         self.load_history_list()
+
+
+class ScreenManagement(ScreenManager):
+    pass
+
+
+class WrappedButton(Button):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.bind(
+            width=lambda *x:
+            self.setter('text_size')(self, (self.width, None)),
+            texture_size=lambda *x: self.setter('height')(self, self.texture_size[1] + 20))
 
 
 kv = Builder.load_file("main.kv")
