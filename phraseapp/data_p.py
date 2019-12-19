@@ -11,15 +11,20 @@ def convert_phrase(phrase):
 
     return result
 
-def parse_phrase(phrase):
 
+def parse_phrase(phrase, key=None):
     p = convert_phrase(phrase)
 
+    if not key:  # if language is English
+        url = f'https://fraze.it/n_search.jsp?q={p}'
+    else:
+        url = f'https://fraze.it/n_search.jsp?q={p}&l={key}'
 
-    page = requests.get(f'https://fraze.it/n_search.jsp?q={p}')
+    page = requests.get(url)
+
+    print(url)
 
     soup = BeautifulSoup(page.content, 'html.parser')
-
 
     phrases = soup.findAll("li", {"class": "res_entry"})
 
@@ -30,5 +35,3 @@ def parse_phrase(phrase):
         parsed_data.append(title.strip().split('\xa0')[0])
 
     return parsed_data
-
-

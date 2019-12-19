@@ -1,4 +1,10 @@
 
+#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDTextField kivymd.uix.textfield.MDTextField
+#:import MDToolbar kivymd.uix.toolbar.MDToolbar
+#:import MDDropDownItem kivymd.uix.dropdownitem.MDDropDownItem
+
 ScreenManagement:
     MainWindowScreen:
     HistoryScreen:
@@ -7,15 +13,31 @@ ScreenManagement:
 <MainWindowScreen>:
     name:"main"
 
+
     GridLayout:
+
         cols:1
 
-        TextInput:
+        MDToolbar:
+            title: "Find Phrase App"
+            size_hint: 1.0, 0.1
+            md_bg_color: app.theme_cls.primary_color
+
+        MDTextField:
             id: phrase_field
             size_hint: 1.0, 0.3
             hint_text: "Enter A Word or A Phrase"
 
-        Button:
+        MDDropDownItem:
+            id: dropdown_item
+            items: app.items
+            dropdown_bg: [1, 1, 1, 1]
+            on_select:
+                root.change_language(dropdown_item.current_item)
+
+
+
+        MDRaisedButton:
             id: phrase_btn
             size_hint: 1.0, 0.3
             text: "Find"
@@ -25,8 +47,7 @@ ScreenManagement:
 
         Widget:
 
-
-        Button:
+        MDRaisedButton:
             text:"History"
             size_hint: 1.0, 0.1
             background_color: 62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0
@@ -39,8 +60,7 @@ ScreenManagement:
     name: "history"
 
 
-
-    Button:
+    MDRaisedButton:
         text:"back"
         size_hint: 1.0, 0.1
         background_color: 62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0

@@ -1,27 +1,23 @@
-import threading
-import webbrowser
 from functools import partial
-from random import random
 
 from kivy.app import App
-from kivy.core.image import Image
-from kivy.core.window import Window
-from kivy.graphics import Color
-from kivy.graphics import Rectangle
 from kivy.lang import Builder
-from kivy.uix.boxlayout import BoxLayout
+from kivy.metrics import dp
 from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
-from kivy.uix.widget import Widget
 import data_p
 from kivy.uix.screenmanager import ScreenManager, Screen
 import db
 from kivy.core.window import Window
-
+from kivy.uix.widget import Widget
+from kivymd.app import MDApp
+from kivymd.theming import ThemeManager
 import sound
+from kivymd.uix.button import MDRaisedButton, MDFillRoundFlatIconButton, MDIconButton, MDRoundFlatIconButton
+from kivymd.uix.menu import MDDropdownMenu
 
 Window.clearcolor = (1, 1, 1, 1)
 
@@ -29,6 +25,16 @@ Window.clearcolor = (1, 1, 1, 1)
 class MainWindowScreen(Screen):
     def __init__(self, **kwargs):
         super(MainWindowScreen, self).__init__(**kwargs)
+
+        self.language_code = None
+        self.languages = [{'lang':'English','code': 0},
+                          {'lang': 'Spanish', 'code': 2},
+                          {'lang': 'German', 'code': 3},
+                          {'lang': 'Italian', 'code': 4},
+                          {'lang': 'French', 'code': 1},
+                          {'lang': 'Portuguese', 'code': 5}]
+
+
         self.layout = GridLayout(cols=1, size_hint_y=None)
         # Make sure the height is such that there is something to scroll.
         self.layout.bind(minimum_height=self.layout.setter('height'))
@@ -38,12 +44,23 @@ class MainWindowScreen(Screen):
 
         self.add_widget(self.scroll)
 
+
+    def change_language(self, language):
+        print(language)
+
+        for item in self.languages:
+            if item['lang'] == language:
+                self.language_code = item['code']
+
+        print(self.language_code)
+
     def find_phrase(self, phrase):
+
         print(phrase)
         if not phrase:
             return
 
-        data = data_p.parse_phrase(phrase)
+        data = data_p.parse_phrase(phrase, self.language_code)
 
         if len(data):
 
@@ -54,7 +71,7 @@ class MainWindowScreen(Screen):
             for el in data:
                 print(el)
                 btn = WrappedButton(text=str(el), size_hint_y=None,
-                                    background_color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0],
+                                    background_color=[33 / 255.0, 150 / 255.0, 243 / 255.0, 1.0],
                                     font_size=20, font_name='Arial',
                                     on_press=partial(sound.pronounce, el))
                 self.layout.add_widget(btn)
@@ -69,13 +86,14 @@ class MainWindowScreen(Screen):
             self.layout.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
 
 
+
 class HistoryScreen(Screen):
     def __init__(self, **kwargs):
         super(HistoryScreen, self).__init__(**kwargs)
 
         print('History().__init__')
 
-        self.layout = GridLayout(cols=1, size_hint_y=None)
+        self.layout = GridLayout(cols=2, size_hint_y=None)
         # Make sure the height is such that there is something to scroll.
         self.layout.bind(minimum_height=self.layout.setter('height'))
 
@@ -103,7 +121,7 @@ class HistoryScreen(Screen):
             for el in data:
                 print('->', el)
                 btn = WrappedButton(text=str(el['title']), size_hint_y=None,
-                                    background_color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0],
+                                    background_color=[255 / 255.0, 255 / 255.0, 255 / 255.0, 1.0],
                                     font_size=20, font_name='Arial')
 
                 dropdown = DropDown(size_hint=(1.0, None))
@@ -111,16 +129,18 @@ class HistoryScreen(Screen):
                 for sentence in el['data']:
                     dropdown.add_widget(WrappedButton(text=str(sentence), size_hint_y=None,
                                                       background_color=[224 / 225.0, 224 / 225.0, 224 / 255.0, 1.0],
+                                                      size_hint=(0.65, None),
                                                       font_size=20, font_name='Arial',
                                                       on_press=partial(sound.pronounce, sentence)))
 
                 btn.bind(on_release=dropdown.open)
                 self.layout.add_widget(btn)
-                self.layout.add_widget(WrappedButton(text='delete', size_hint_x=0.1, size_hint_y=None,
-                                                     background_color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0],
-                                                     font_size=15, font_name='Arial',
-                                                     on_release=partial(self.delete_from_history, el['title'])))
+                self.layout.add_widget(MDIconButton(icon='delete',
+                                                    on_press=partial(self.delete_from_history, el['title']),
+                                                    size_hint=(0.3, None)))
                 self.layout.add_widget(dropdown)
+
+            self.layout.add_widget(Widget())
 
 
         else:
@@ -144,12 +164,14 @@ class WrappedButton(Button):
             texture_size=lambda *x: self.setter('height')(self, self.texture_size[1] + 20))
 
 
-kv = Builder.load_file("main.kv")
+class FindPhraseApp(MDApp):
+    def __init__(self, **kwargs):
+        self.title = "Find Phrase App"
+        super().__init__(**kwargs)
 
-
-class FindPhraseApp(App):
     def build(self):
-        return kv
+        self.items = ['English', 'Spanish', 'German', 'Italian', 'Portuguese', 'French']
+        self.root = Builder.load_file("main.kv")
 
 
 if __name__ == "__main__":
