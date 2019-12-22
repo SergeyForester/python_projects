@@ -17,6 +17,7 @@ from kivymd.app import MDApp
 from kivymd.theming import ThemeManager
 import sound
 from kivymd.uix.button import MDRaisedButton, MDFillRoundFlatIconButton, MDIconButton, MDRoundFlatIconButton
+from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
 
 Window.clearcolor = (1, 1, 1, 1)
@@ -63,7 +64,6 @@ class MainWindowScreen(Screen):
         data = data_p.parse_phrase(phrase, self.language_code)
 
         if len(data):
-
             for element in self.layout.children:
                 print(element)
                 self.layout.remove_widget(element)
@@ -97,7 +97,7 @@ class HistoryScreen(Screen):
         # Make sure the height is such that there is something to scroll.
         self.layout.bind(minimum_height=self.layout.setter('height'))
 
-        self.scroll = ScrollView(size_hint=(1, None), size=(Window.width, Window.height * 0.60))
+        self.scroll = ScrollView(size_hint=(1, 1), size=(Window.width, Window.height * 0.60))
         self.scroll.add_widget(self.layout)
 
         self.add_widget(self.scroll)
@@ -121,24 +121,25 @@ class HistoryScreen(Screen):
             for el in data:
                 print('->', el)
                 btn = WrappedButton(text=str(el['title']), size_hint_y=None,
-                                    background_color=[255 / 255.0, 255 / 255.0, 255 / 255.0, 1.0],
+                                    background_color=[252 / 255.0, 249 / 255.0, 240 / 255.0, 1.0],
                                     font_size=20, font_name='Arial')
 
-                dropdown = DropDown(size_hint=(1.0, None))
-                dropdown.dismiss()
+                self.dropdown = DropDown(size_hint=(1.0, None))
+                self.dropdown.dismiss()
                 for sentence in el['data']:
-                    dropdown.add_widget(WrappedButton(text=str(sentence), size_hint_y=None,
-                                                      background_color=[224 / 225.0, 224 / 225.0, 224 / 255.0, 1.0],
+                    print(sentence)
+                    self.dropdown.add_widget(WrappedButton(text=str(sentence), size_hint_y=None,
+                                                      background_color=[252 / 225.0, 249 / 225.0, 240 / 255.0, 1.0],
                                                       size_hint=(0.65, None),
                                                       font_size=20, font_name='Arial',
                                                       on_press=partial(sound.pronounce, sentence)))
 
-                btn.bind(on_release=dropdown.open)
+                btn.bind(on_release=self.dropdown.open)
                 self.layout.add_widget(btn)
                 self.layout.add_widget(MDIconButton(icon='delete',
                                                     on_press=partial(self.delete_from_history, el['title']),
                                                     size_hint=(0.3, None)))
-                self.layout.add_widget(dropdown)
+                self.layout.add_widget(self.dropdown)
 
             self.layout.add_widget(Widget())
 
@@ -146,7 +147,15 @@ class HistoryScreen(Screen):
         else:
             self.layout.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
 
+    def dropdown_open(self, *args):
+        try:
+            print(self.dropdown)
+            self.dropdown.open(self)
+        except RecursionError:
+            print('rec')
+
     def delete_from_history(self, title, *args):
+        print(title)
         db.delete_request(title)
         self.load_history_list()
 
@@ -171,7 +180,7 @@ class FindPhraseApp(MDApp):
 
     def build(self):
         self.items = ['English', 'Spanish', 'German', 'Italian', 'Portuguese', 'French']
-        self.root = Builder.load_file("main.kv")
+        self.root = Builder.load_file("main_.kv")
 
 
 if __name__ == "__main__":

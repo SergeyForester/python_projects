@@ -1,0 +1,48 @@
+#:import MDRaisedButton kivymd.uix.button.MDRaisedButton
+#:import MDTextField kivymd.uix.textfield.MDTextField
+#:import MDToolbar kivymd.uix.toolbar.MDToolbar
+#:import MDLabel kivymd.uix.label.MDLabel
+#:import MDIconButton kivymd.uix.button.MDIconButton
+
+ScreenManagement:
+    MainWindow:
+
+<MainWindow>:
+    GridLayout:
+        cols:1
+
+        MDToolbar:
+            title: "Audio Player"
+            size_hint: 1.0, 0.1
+            md_bg_color: app.theme_cls.primary_color
+
+
+
+        Image:
+            source: 'assets/bg.jpg'
+            size: self.texture_size
+
+
+
+        MDTextField:
+            id: file_field
+            hint_text: 'Enter file path or drag file on the window'
+            size_hint:1.0, 0.2
+
+
+        MDIconButton:
+            icon:'upload'
+            size_hint:1.0, 0.1
+            on_release:
+                root.load_sound(file_field.text)
+
+        MDIconButton:
+            id: play_btn
+            icon:'play'
+            size_hint:1.0, 0.1
+            on_release:
+                root.play_sound(play_btn)
+
+
+
+
