@@ -180,7 +180,7 @@ class FindPhraseApp(MDApp):
 
     def build(self):
         self.items = ['English', 'Spanish', 'German', 'Italian', 'Portuguese', 'French']
-        self.root = Builder.load_file("main_.kv")
+        self.root = Builder.load_file("main.kv")
 
 
 if __name__ == "__main__":
