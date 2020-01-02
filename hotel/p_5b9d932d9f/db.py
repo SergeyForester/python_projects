@@ -8,7 +8,7 @@ cur = conn.cursor()
 def get_object_or_404(table, query):
     try:
         cur.execute(f"""SELECT * FROM `{table}` WHERE {query}""")
-        return cur.fetchall()
+        return cur.fetchall()[0]
     except Exception as err:
         raise Exception(err)
 

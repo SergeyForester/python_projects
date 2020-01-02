@@ -4516,9 +4516,7 @@ td.book_now a.enquire.dynamic {
     color: #787878
 }
 
-.date_nav span {
-    width: 250px
-}
+
 
 .date_nav .date_from {
     text-align: left;
@@ -5031,7 +5029,7 @@ dl.large dd {
     overflow: hidden;
     text-align: left;
     text-transform: capitalize;
-    background-image: url(/assets/star_mask-123ab8d301209d954099bb9ea94bacb8.png);
+    background-image: url(/static/img/star_mask-123ab8d301209d954099bb9ea94bacb8.png);
     background-repeat: no-repeat;
     background-position: 0 0;
     height: 25px
@@ -5046,7 +5044,7 @@ dl.small dd {
     overflow: hidden;
     text-align: left;
     text-transform: capitalize;
-    background-image: url(/assets/star_mask_small-e110605e97e53da37b0afb9902ac63d2.png);
+    background-image: url(/static/img/star_mask-123ab8d301209d954099bb9ea94bacb8.png);
     background-repeat: no-repeat;
     background-position: 0 0;
     height: 10px
@@ -5061,7 +5059,7 @@ dl.large_self_rated dd {
     overflow: hidden;
     text-align: left;
     text-transform: capitalize;
-    background-image: url(/assets/dot_mask-61b377f142f42ab9aa4a0a17ce0fdb55.png);
+    background-image: url(/static/img/star_mask-123ab8d301209d954099bb9ea94bacb8.png);
     background-repeat: no-repeat;
     background-position: 0 0;
     height: 25px
@@ -9513,12 +9511,6 @@ td p {
 }
 
 
-.header {
-  padding: 10px 16px;
-  background: #555;
-  color: #f1f1f1;
-}
-
 
 /* Page content */
 .content {
@@ -9941,4 +9933,11 @@ textarea {
 .features input{
     margin:10px;
 
+}
+
+.week{
+    height: 22px!important;
+}
+.day{
+    height: 22px!important;
 }

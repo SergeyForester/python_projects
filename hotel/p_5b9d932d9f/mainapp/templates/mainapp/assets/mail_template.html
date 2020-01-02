@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <style>
+      .title{
+        font-family:'Roboto', sans-serif;
+        font-size:20px;
+        line-height:44px;
+        text-align:center;
+        text-transform: uppercase;
+        color:white;
+      }
+      .title-block{
+        height:44px;
+        background:rgb(6,6,36);
+      }
+      .letter{
+        position:relative;
+      }
+      .hello{
+        font-family:'Roboto', sans-serif;
+        font-size:18px;
+        line-height:44px;
+        text-align:center;
+      }
+      .message-text{
+        font-family:'Roboto', sans-serif;
+        font-size:17px;
+        line-height:30px;
+        text-align:center;
+      }
+     </style>
+  </head>
+  <body>
+    <div class="letter">
+      <div class="title-block">
+          <p class='title'>{{ nameOfHotel }}</p>
+      </div>
+      <div class="message-container">
+        <p class="hello">Hello, {{name}} {{surname}}!</p>
+        <p class="message-text">
+          We have got your booking request. <br>
+          Check everything <br>
+          Room: {{room}} <br>
+          Check in date: {{date_from}} <br>
+          Check out date: {{date_to}} <br>
+
+          Wish you a pleasant stay at {{nameOfHotel}}
+        </p>
+      </div>
+    </div>
+
+  </body>
+</html>

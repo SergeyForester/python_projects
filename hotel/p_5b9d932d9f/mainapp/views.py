@@ -1,11 +1,18 @@
 import datetime
 
+from django.conf import settings
+from django.contrib import messages
+from django.core.mail import send_mail
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
 from django.shortcuts import render
 
 # Create your views here.
+from django.template.loader import render_to_string
+from django.urls import reverse
+from django.utils.html import strip_tags
 
 import db
 
@@ -133,3 +140,40 @@ def main_page(request):
     return render(request, 'mainapp/index.html', content)
 
 
+def book_room(request, pk):
+    print(pk)
+
+    room = db.get_object_or_404('mainapp_room', f'id={pk}')
+    days = []
+    for dayR in range(14):
+        day = datetime.date.today() + datetime.timedelta(days=dayR)
+        print(day)
+        days.append(day)
+    data_ = db.all('mainapp_data')
+
+    nameOfHotel = data_[findElemInListByName(data_, 'nameOfHotel')][2]
+
+    if request.method == "POST":
+        name = request.POST.get('name')
+        surname = request.POST.get('surname')
+        email = request.POST.get('email')
+        number = request.POST.get('number')
+        date_from = request.POST.get('date-from')
+        date_to = request.POST.get('date-to')
+        print(name, surname, email, number, date_from, date_to)
+
+
+        html_m = render_to_string('mainapp/assets/mail_template.html', {'nameOfHotel': nameOfHotel, 'name':name,
+                                                                        'surname':surname, 'date_from':date_from,
+                                                                        'date_to':date_to, 'room': room[1]})
+
+        send_mail(f'{nameOfHotel.upper()} reservation', '' , settings.EMAIL_HOST_USER, [email], html_message=html_m, fail_silently=False)
+
+    else:
+        pass
+
+    content = {'room': room, 'days': days,'nameOfHotel':nameOfHotel, 'bookings':db.all('mainapp_dateitem')}
+
+    print(room)
+
+    return render(request,'mainapp/book_room.html', content)
