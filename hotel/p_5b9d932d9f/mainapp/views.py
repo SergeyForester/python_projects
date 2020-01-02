@@ -148,7 +148,7 @@ def checkBooking(date_from, date_to, room):
 
     for date in date_list:
         # if select * from `table` where room = room and date_item = date
-        if len(db.filter('mainapp_dateitem', f'room = {room} and date_item = {date}')):
+        if len(db.filter('mainapp_dateitem', f"room_id = {int(room)} and date_item = '{str(date).split(' ')[0]}'")):
             return False
         else:
             continue
@@ -184,7 +184,9 @@ def book_room(request, pk):
                                                                         'surname':surname, 'date_from':date_from,
                                                                         'date_to':date_to, 'room': room[1]})
 
-        if checkBooking(date_from, date_to, room[1]): # if there are not any reservations
+        print(checkBooking(date_from, date_to, room[0]))
+
+        if checkBooking(date_from, date_to, room[0]): # if there are not any reservations
             send_mail(f'{nameOfHotel.upper()} reservation', '' , settings.EMAIL_HOST_USER, [email], html_message=html_m, fail_silently=False)
         else:
             messages.error(request, 'This room is not avaliable at this period')

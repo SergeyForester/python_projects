@@ -20,5 +20,6 @@ def all(table):
 
 
 def filter(table, query):
+    print('query', f"""SELECT * FROM `{table}` WHERE {query}""")
     cur.execute(f"""SELECT * FROM `{table}` WHERE {query}""")
     return cur.fetchall()
