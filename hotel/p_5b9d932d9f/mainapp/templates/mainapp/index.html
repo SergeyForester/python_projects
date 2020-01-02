@@ -1,0 +1,757 @@
+{% load static %}
+{% load index %}
+{% load define %}
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <title>Hotel</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta content='Virginia y Pedro son una pareja Italo-Dominicana, juntos con sus hijos pequeños viven y dirigen este hotel con encanto. El Balata, refleja claramente la unión de estas dos familias de diferentes culturas y estilos, pero en completa armonía creando un pequeño hotel sin precedentes en el Caribe.&#x000A;&#x000A;'
+          name='description'>
+
+    <link rel="stylesheet" media="screen" href="{% static 'css/main.css' %} "/>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <meta name="csrf-param" content="authenticity_token"/>
+    <meta name="csrf-token"
+          content="UENh4MFnwXRSowg3jlH25Ki65IrHb2BuuiyHi3NGjjQTRGFHD32EZ1Bq6FI8RuIL8nknlkbbi8LHb2PVY1HzWQ=="/>
+</head>
+
+<body>
+    <div id='main'>
+        <div id='banner'>
+            <div class="blackHeader">
+                <p>{{ nameOfHotel }}</p>
+            </div>
+            <div class="blackMenu">
+                    <a href="#banner">Домой</a>
+                    <a href="#three">{{ threeWords }}</a>
+                    <a href="#stayWithUs">Оставайся с нами</a>
+                    <a href="#discover">Карта</a>
+                    <a href="#contact">Контакты</a>
+                </div>
+            <div id="headerPhoto">
+                <div class="myContainer">
+                    <div id="myCarousel" class="carousel slide" data-interval="3000" data-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                        </ol>
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+
+                            <div class="item active">
+                                <img src="/media/{{ bannerPhoto1 }}" alt="Los Angeles" style="width:100%;">
+                                <div class="carousel-caption">
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img src="/media/{{ bannerPhoto2 }}" alt="Chicago" style="width:100%;">
+                                <div class="carousel-caption">
+                                </div>
+                            </div>
+
+                            <div class="item">
+                                <img src="/media/{{ bannerPhoto3 }}" alt="New York" style="width:100%;">
+                                <div class="carousel-caption">
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Left and right controls -->
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <center>
+            <div class="descriptions">
+                <div class="joinUs">
+                    {{ joinUs. }}
+                </div>
+                <br>
+                <div class="advantages">
+                    {{ advantages }}
+                </div>
+                <br>
+                <div class="headerDescription">
+                    {{ headerDescription }}
+                </div>
+                <br>
+                <div class="threeWords" id="three">
+                    {{ threeWords }}
+                </div>
+                <br>
+                <div class="advantages">
+                    {{ textAfterThreeWords }}
+                </div>
+
+                <br>
+                <div class="descrPhotoContainer">
+                    <div id="descrPhoto1" style="float:left; margin-right:30px;"><img src="/media/{{ photoDescr1 }}"
+                                                                                      alt=""></div>
+                    <div id="descrPhoto2" style="float:left; margin-right:30px;"><img src="/media//{{ photoDescr2 }}"
+                                                                                      alt=""></div>
+                    <div id="descrPhoto3" style="float:left; margin-right:30px;"><img src="/media/{{ photoDescr3 }}"
+                                                                                      alt=""></div>
+                    <div id="descrPhoto4" style="float:left; margin-right:30px;"><img src="/media/{{ photoDescr4 }}"
+                                                                                      alt=""></div>
+                </div>
+                <div class="nameOfHotel" id="stayWithUs">
+                    {{ nameOfHotel }}
+                </div>
+                <br>
+                <div class="headerDescription">
+                    {{ longDescriptionOfHotel }}
+                </div>
+
+
+                <br>
+                <div class="bookingPhotoContainer">
+                    <div id="bookingPhoto1" style="float:left; margin-right:10px;"><img
+                            src="/media/{{ bookingPhoto1 }}" alt=""></div>
+                    <div id="bookingPhoto2" style="float:left; margin-right:10px;"><img
+                            src="/media/{{ bookingPhoto2 }}" alt=""></div>
+                    <div id="bookingPhoto3" style="float:left; margin-right:10px;"><img
+                            src="/media/{{ bookingPhoto3 }}" alt=""></div>
+                </div>
+
+                <br>
+                <div class="threeWords">
+                    {{ bookAHotelRoom }}
+                </div>
+            </div>
+        </center>
+
+        <div id='content'>
+            <div class='overview'>
+                <div class='header'>
+                    <!-- <h1><input type="text" placeholder="Отель Победа"></h1> -->
+                    <div style="float:left">
+                        <h1>
+                        </h1>
+                    </div>
+                    <div style="float:right">
+
+                        {% if stars == '1' %}
+                        <dl class="large rating stars_10_large">
+                            <dt>Rating</dt>
+                            <dd>3.0 stars</dd>
+                        </dl>
+                        {% elif stars == '2' %}
+                        <dl class="large rating stars_20_large">
+                            <dt>Rating</dt>
+                            <dd>3.0 stars</dd>
+                        </dl>
+                        {% elif stars == '3' %}
+                        <dl class="large rating stars_30_large">
+                            <dt>Rating</dt>
+                            <dd>3.0 stars</dd>
+                        </dl>
+                        {% elif stars == '4' %}
+                        <dl class="large rating stars_40_large">
+                            <dt>Rating</dt>
+                            <dd>3.0 stars</dd>
+                        </dl>
+                        {% elif stars == '5' %}
+                        <dl class="large rating stars_50_large">
+                            <dt>Rating</dt>
+                            <dd>3.0 stars</dd>
+                        </dl>
+                        {% endif %}
+
+                    </div>
+                    <div class='top-right'>
+                    </div>
+
+                    <div class='website'>
+                        <!--TODO-->
+                    </div>
+
+                </div>
+            </div>
+            <div class='availability'>
+                <table cellspacing='0' class='no-margin rates-header'>
+                    <thead class='controls'>
+                    <thead class='controls'>
+                    <input name="utf8" type="hidden" value="&#x2713;"/>
+                    <input type="hidden" name="locale" id="locale" value="en"/>
+                    <tr>
+                        <th colspan='3'></th>
+                        <th class='promotion' colspan='14'>
+                            <button name="button" type="submit" class="apply"><span class='fa fa-check-circle'></span>
+                                Apply
+                            </button>
+                            <input type="text" name="promotion_code" id="promotion_code" value=""/>
+                            <label for='promotion_code'>Enter a promotional code</label>
+                        </th>
+                    </tr>
+                    <tr>
+                        Week
+                        <i class='fa fa-forward'></i>
+                        <th class='date_navigation' colspan='14'>
+                            <table>
+                                <tr>
+                                    <th class='date_nav top_left_corner'>
+                                        <ul class='back'>
+                                            <li>
+                                                <a class="week" id="back_1_week" data-date="23 Jun 2019"
+                                                   href="#"><i
+                                                        class='fa fa-backward'></i>
+                                                    Week
+                                                </a></li>
+                                            <li>
+                                                <a class="day" id="back_1_day" data-date="23 Jun 2019" href="#"><i
+                                                        class='fa fa-caret-left'></i>
+                                                    Day
+                                                </a></li>
+                                        </ul>
+
+                                    </th>
+                                    <th class='date_nav date_from_nav'>
+                                        <div class='date_from'>
+                                            <label for="start_date_display">Date from</label>
+                                            <input type="text" name="start_date_display" id="start_date_display"
+                                                   value="23 Jun 2019" class="calendar"/>
+                                            <input type="hidden" name="start_date" id="start_date"
+                                                   value="2019-06-23"/>
+                                        </div>
+                                    </th>
+                                    <th class='date_nav top_right_corner'>
+                                        <ul class='forward'>
+                                            <li>
+                                                <a class="day" id="forward_1_day" data-date="24 Jun 2019" href="#">Day
+                                                    <i class='fa fa-caret-right'></i>
+                                                </a></li>
+                                            <li>
+                                                <a class="week" id="forward_1_week" data-date="30 Jun 2019">
+                                                </a>
+                                            </li>
+                                        </ul>
+
+                                    </th>
+                                </tr>
+                            </table>
+                        </th>
+                    </tr>
+
+                    </thead>
+                </table>
+
+                </thead>
+                </table>
+                <table cellspacing='0' class='rates' id='rates'>
+                    <thead>
+                    <tr>
+                        <th class='note' colspan='2'>Prices will be presented in dollars</th>
+                        <th class='rack_rate'></th>
+                        {% for date in days %}
+                        <th class='date'>
+                            <span class='day_name'>{{ date | date:"l" }}</span>
+                            <span class='day'>{{ date.day }}</span>
+                            <span class='month'>{{ date.month }}</span>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for room in rooms %}
+                        <tr>
+                            <td class='room_name'>
+                                <p>{{ room.1 }}</p>
+                                <a rel=".photo_overlay[data-id=room_107214]" class="photos" href="#">Photos</a>
+                                <a class="details" href="#room_107214">Details</a>
+                            </td>
+                            <td class='book_now'>
+                                <a class="book dynamic en" href=""><span class='fa fa-chevron-circle-right'></span>
+                                    Book
+                                </a></td>
+                            <td class='rack_rate'>$</td>
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+                            {% define "" as stop_loop %}
+                            {% for booking in bookings %}
+                                {% if stop_loop %}{% else %}
+                                    {% if booking.3 == room.0 %}
+                                        {% if booking.1 == days|index:forloop.parentloop.counter0|date:'Y-m-d' %}
+                                            <td class='rate' data-id='124791412'>
+                                                <a href="" #>{{room.2}}</a>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% else %}
+                                            <td class='rate' data-id='124791412'>
+                                                <span class='unavailable'>Sold</span>
+                                            </td>
+                                            {% define "true" as stop_loop %}
+                                        {% endif %}
+                                    {% else %}
+                                        <td class='rate' data-id='124791412'>
+                                            <a href="" #>{{room.2}}</a>
+                                        </td>
+                                        {% define "true" as stop_loop %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <th class='bottom_left_corner bottom_right_corner' colspan='17'>
+                            <em>Move the mouse over the price for inclusions, occupancy and minimum stay</em>
+                        </th>
+                    </tr>
+                    </tfoot>
+                </table>
+
+
+            </div>
+
+            <div class="contact">
+                Контакты
+            </div>
+            <div class='property' id="contact">
+                <h2>Информация об отеле</h2>
+                <div class='location'>
+                    <div class='vcard'>
+                        <div class='fn org'>
+                            <strong>
+                                Информация об отеле <br>
+                            </strong>
+                            {{ nameOfHotelInfo }}
+
+                        </div>
+                        <br>
+                        <div class='phone'>
+                            <strong>Телефон</strong>
+                            <span class='tel'>
+                            {{ telephoneNumber }}
+                            </span>
+                        </div>
+                        <br>
+                        <div class='adr'>
+                            <div class='street-address'>
+                                <strong>Адрес</strong><br>
+                                {{ address }}
+                            </div>
+                            <br>
+                            <div>
+                                <span class='postal-code'>
+                                    <strong>Почтовый код</strong>
+                                 {{ postalCode }}
+                                </span>
+                                <br>
+                            </div>
+                        </div>
+                        <div class='website'>
+                            <!--TODO-->
+
+                        </div>
+
+                    </div>
+                    <div class='actions' id="discover">
+                        {{ mapCode|safe }}
+                        <!--TODO-->
+                    </div>
+                </div>
+                <div class='main'>
+
+                    <!--<div class='photo_overlay overlay' id='property_overlay'>-->
+
+                    <div class='hero'>
+                        <div class='features'>
+                            <h3>Удобства</h3>
+                            <ol>
+                                <li class='feature'>
+                                    {{ feature1 }}
+                                </li>
+                                <li class='feature'>
+                                    {{ feature2 }}
+                                </li>
+                                <li class='feature'>
+                                    {{ feature3 }}
+                                </li>
+                                <li class='feature'>
+                                    {{ feature4 }}
+                                </li>
+                                <li class='feature'>
+                                    {{ feature5 }}
+                                </li>
+                                <li class='feature'>
+                                    {{ feature6 }}
+                                </li>
+                                <li class='feature'>
+                                    {{ feature7 }}
+                                </li>
+                                <li class='feature'>
+                                    {{ feature8 }}
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class='terms_conditions' id='terms_conditions'>
+                        <h2>Условия</h2>
+                        <p>
+                            {{ termsAndConditions }}
+                            <br>
+                        </p>
+                    </div>
+                    <!--</div>-->
+                </div>
+
+            </div>
+            <div id='footer'></div>
+        </div>
+        <div id='loading'></div>
+        <!--<script src="/assets/public-2543e3bbf9498af7a04eb305280afed3.js"></script>-->
+
+        <div class='tip' id='room_type_date_tooltip'>
+            <div class='special_header'>Hot Deal!</div>
+            <table>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class='tip' id='extra_tooltip'></div>
+        <div class='tip' id='room_tooltip'></div>
+        <script src="{% static 'js/headerPhotoForm.js' %}"></script>
+        <script src="{% static 'js/photoDescriptions.js' %}"></script>
+        <script src="{% static 'js/bookingPhotos.js' %}"></script>
+
+    </div>
+
+</body>
+
+</html>
