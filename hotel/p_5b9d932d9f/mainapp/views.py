@@ -26,6 +26,11 @@ def findElemInListByName(list, name):
             index += 1
 
 
+def hotelName():
+    data_ = db.all('mainapp_data')
+    return data_[findElemInListByName(data_, 'nameOfHotel')][2]
+
+
 
 def main_page(request):
     data_rooms = db.all('mainapp_room')
@@ -144,10 +149,13 @@ def checkBooking(date_from, date_to, room):
     start = datetime.datetime.strptime(date_from, "%Y-%m-%d")
     end = datetime.datetime.strptime(date_to, "%Y-%m-%d")
 
-    date_list = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days)]
+    date_list = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days+1)]
+
+    if str(date_list[0]).split(' ')[0] < str(datetime.datetime.today()).split(' ')[0]:
+        return False
 
     for date in date_list:
-        # if select * from `table` where room = room and date_item = date
+        #  select * from `table` where room = room and date_item = date
         if len(db.filter('mainapp_dateitem', f"room_id = {int(room)} and date_item = '{str(date).split(' ')[0]}'")):
             return False
         else:
@@ -155,6 +163,15 @@ def checkBooking(date_from, date_to, room):
 
     return True
 
+
+def insertBooking(date_from, date_to, room_id, full_name):
+    start = datetime.datetime.strptime(date_from, "%Y-%m-%d")
+    end = datetime.datetime.strptime(date_to, "%Y-%m-%d")
+
+    date_list = [start + datetime.timedelta(days=x) for x in range(0, (end - start).days+1)]
+
+    for date in date_list:
+        db.insert('mainapp_dateitem', [str(date).split(' ')[0], 1, room_id, full_name], '(date_item, is_busy, room_id, full_name)')
 
 
 def book_room(request, pk):
@@ -187,6 +204,9 @@ def book_room(request, pk):
         print(checkBooking(date_from, date_to, room[0]))
 
         if checkBooking(date_from, date_to, room[0]): # if there are not any reservations
+
+            insertBooking(date_from, date_to, room[0], f'{name} {surname}')
+
             send_mail(f'{nameOfHotel.upper()} reservation', '' , settings.EMAIL_HOST_USER, [email], html_message=html_m, fail_silently=False)
         else:
             messages.error(request, 'This room is not avaliable at this period')

@@ -9542,7 +9542,7 @@ table.rates tfoot th,.reservation .pricing table tfoot th,dl.rating,.reservation
     margin: auto;
 }
 #room-table{
-    width: 70%;
+    width: 100%;
     margin: auto;
     margin-bottom: 10px;
 }

@@ -14,16 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 import adminapp.views as adminapp
 import mainapp.views as mainapp
+import hashlib
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', mainapp.main_page, name='main'),
-    path('room/<int:pk>/', mainapp.book_room, name='room')]
+    path('room/<int:pk>/', mainapp.book_room, name='room'),
+    path(f"management/{hashlib.sha256(mainapp.hotelName().encode('utf-8')).hexdigest()}/",
+         include('adminapp.urls', namespace='s-admin'))]
 
 from django.conf import settings
 from django.conf.urls.static import static
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

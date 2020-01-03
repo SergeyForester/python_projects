@@ -1,0 +1,55 @@
+{##}
+{#<table cellspacing='0' class='rates' id='rates'>#}
+{#    <thead>#}
+{#    <tr>#}
+{#        <th class='note' colspan='2'>Цены будут представлены в рублях</th>#}
+{#        <th class='rack_rate'></th>#}
+{#        {% for date in days %}#}
+{#        <th class='date'>#}
+{#            <span class='day_name'>{{ date | date:"l" }}</span>#}
+{#            <span class='day'>{{ date.day }}</span>#}
+{#            <span class='month'>{{ date.month }}</span>#}
+{#        </th>#}
+{#        {% endfor %}#}
+{#    </tr>#}
+{#    </thead>#}
+{#    <tbody>#}
+{#    {% if roomTable %}#}
+{#        {% for room in roomTable %}#}
+{#            <tr>#}
+{#                <td class='room_name'>#}
+{#                    <p>{{room.name}}</p>#}
+{#                </td>#}
+{#                <td class='book_now'>#}
+{##}
+{#                </td>#}
+{#                <td class='rack_rate'>P</td>#}
+{##}
+{##}
+{#                {% for day in days %}#}
+{#                    <!--если в roomBusy есть запись с текущим днем - -->#}
+{#                    {% if roomData|pRoomName:forloop.counter0 == room.name %}#}
+{#                        {% if roomData|pRoomDate:forloop.counter0 == day %}#}
+{#                                <td class='rate'>#}
+{#                                    <a href="{% url 'admin:book'%}?room={{room.name}}&dateDay={{day.day}}&dateMonth={{day.month}}&dateYear={{day.year}}">Продано</a>#}
+{#                                </td>#}
+{#                        {% else %}#}
+{#                            {% if forloop.counter < 15 %}#}
+{#                                <!--continue-->#}
+{#                            {% else %}#}
+{#                            <td class='rate'>#}
+{#                                <a href="{% url 'admin:book'%}?room={{room.name}}&dateDay={{day.day}}&dateMonth={{day.month}}&dateYear={{day.year}}">{{ room.price }}</a>#}
+{#                            </td>#}
+{#                         {% endif %}#}
+{#                        {% endif %}#}
+{#                    {% else %}#}
+{#                        <td class='rate'>#}
+{#                            <a href="{% url 'admin:book'%}?room={{room.name}}&dateDay={{day.day}}&dateMonth={{day.month}}&dateYear={{day.year}}">{{ room.price }}</a>#}
+{#                        </td>#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#                {%endfor%}#}
+{#    {% endif %}#}
+{#    </tbody>#}
+{#</table>#}
+{##}
