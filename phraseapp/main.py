@@ -1,5 +1,6 @@
 from functools import partial
 
+import pyperclip
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.metrics import dp
@@ -19,6 +20,7 @@ import sound
 from kivymd.uix.button import MDRaisedButton, MDFillRoundFlatIconButton, MDIconButton, MDRoundFlatIconButton
 from kivymd.uix.label import MDLabel
 from kivymd.uix.menu import MDDropdownMenu
+from settings import *
 
 Window.clearcolor = (1, 1, 1, 1)
 
@@ -28,13 +30,6 @@ class MainWindowScreen(Screen):
         super(MainWindowScreen, self).__init__(**kwargs)
 
         self.language_code = None
-        self.languages = [{'lang':'English','code': 0},
-                          {'lang': 'Spanish', 'code': 2},
-                          {'lang': 'German', 'code': 3},
-                          {'lang': 'Italian', 'code': 4},
-                          {'lang': 'French', 'code': 1},
-                          {'lang': 'Portuguese', 'code': 5}]
-
 
         self.layout = GridLayout(cols=1, size_hint_y=None)
         # Make sure the height is such that there is something to scroll.
@@ -45,18 +40,16 @@ class MainWindowScreen(Screen):
 
         self.add_widget(self.scroll)
 
-
     def change_language(self, language):
         print(language)
 
-        for item in self.languages:
+        for item in LANGUAGES:
             if item['lang'] == language:
                 self.language_code = item['code']
 
         print(self.language_code)
 
     def find_phrase(self, phrase):
-
         print(phrase)
         if not phrase:
             return
@@ -64,14 +57,12 @@ class MainWindowScreen(Screen):
         data = data_p.parse_phrase(phrase, self.language_code)
 
         if len(data):
-            for element in self.layout.children:
-                print(element)
-                self.layout.remove_widget(element)
+            self.layout.clear_widgets()
 
             for el in data:
                 print(el)
                 btn = WrappedButton(text=str(el), size_hint_y=None,
-                                    background_color=[33 / 255.0, 150 / 255.0, 243 / 255.0, 1.0],
+                                    background_color=[74 / 255, 213 / 255, 237 / 255, 1],
                                     font_size=20, font_name='Arial',
                                     on_press=partial(sound.pronounce, el))
                 self.layout.add_widget(btn)
@@ -80,11 +71,10 @@ class MainWindowScreen(Screen):
                 print(element)
 
             db.add_note(phrase, data)  # add to db
-            HistoryScreen().load_history_list()  # and update the list of history
+            # HistoryScreen().load_history_list()  # and update the list of history
 
         else:
             self.layout.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
-
 
 
 class HistoryScreen(Screen):
@@ -120,39 +110,50 @@ class HistoryScreen(Screen):
             print(len(data))
             for el in data:
                 print('->', el)
-                btn = WrappedButton(text=str(el['title']), size_hint_y=None,
-                                    background_color=[252 / 255.0, 249 / 255.0, 240 / 255.0, 1.0],
-                                    font_size=20, font_name='Arial')
+                btn = WrappedButton(text=f'{el["title"]} {"(completed)" if el["repetitions"] == 6 else ""}', size_hint_y=None,
+                                    background_color=COLORS[str(el['repetitions'])],
+                                    font_size=20, font_name='Arial',
+                                    on_release=partial(sound.pronounce, el['title']))
+                print(COLORS[str(el['repetitions'])])
 
-                self.dropdown = DropDown(size_hint=(1.0, None))
-                self.dropdown.dismiss()
-                for sentence in el['data']:
-                    print(sentence)
-                    self.dropdown.add_widget(WrappedButton(text=str(sentence), size_hint_y=None,
-                                                      background_color=[252 / 225.0, 249 / 225.0, 240 / 255.0, 1.0],
-                                                      size_hint=(0.65, None),
-                                                      font_size=20, font_name='Arial',
-                                                      on_press=partial(sound.pronounce, sentence)))
+                # self.dropdown = DropDown(size_hint=(0.7, None))
+                # self.dropdown.dismiss()
+                # for sentence in el['data']:
+                #     print(sentence)
+                #     self.dropdown.add_widget(WrappedButton(text=str(sentence), size_hint_y=None,
+                #                                            background_color=[252 / 225.0, 249 / 225.0, 240 / 255.0, 1.0],
+                #                                            size_hint=(0.7, None),
+                #                                            font_size=20, font_name='Arial',
+                #                                            on_press=partial(sound.pronounce, sentence)))
+                #
+                # btn.bind(on_release=partial(self.dropdown_open, btn, el['title']))
 
-                btn.bind(on_release=self.dropdown.open)
+                btn.bind(on_press=partial(self.search_phrase_from_history, el['title']))
+
                 self.layout.add_widget(btn)
                 self.layout.add_widget(MDIconButton(icon='delete',
                                                     on_press=partial(self.delete_from_history, el['title']),
-                                                    size_hint=(0.3, None)))
-                self.layout.add_widget(self.dropdown)
-
-            self.layout.add_widget(Widget())
-
+                                                    size_hint=(0.25, None)))
+                # self.layout.add_widget(self.dropdown)
 
         else:
             self.layout.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
 
-    def dropdown_open(self, *args):
-        try:
-            print(self.dropdown)
-            self.dropdown.open(self)
-        except RecursionError:
-            print('rec')
+    def search_phrase_from_history(self, title, *args):
+        # pyperclip.copy(title)
+        # self.manager.current = 'main'
+        # MainWindowScreen().ids.phrase_field.paste()
+
+        db.phrase_repetitions_increase(title)
+
+
+    # def dropdown_open(self, widget, title, *args):
+    #     try:
+    #         print('dropdown', self.dropdown)
+    #         self.dropdown.open(widget)
+    #         db.phrase_repetitions_increase(title)
+    #     except Exception as err:
+    #         print('rec', err)
 
     def delete_from_history(self, title, *args):
         print(title)

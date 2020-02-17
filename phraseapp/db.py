@@ -7,20 +7,31 @@ con = pymongo.MongoClient()
 database = con['phrase_app']
 
 # коллекцию можно выбрать так
-table = database['phrases']
+phrases = database['phrases']
+
 
 def get_history():
-    return [el for el in table.find()]
+    return [el for el in phrases.find()]
+
+
+def phrase_repetitions_increase(title):
+    phrase = phrases.find({'title': title})[0]
+    if phrase['repetitions'] <= 5:
+        phrases.update(
+            {'title': title},
+            {"$set": {'repetitions': phrase['repetitions'] + 1}})
+        print(phrase['repetitions'] + 1)
 
 
 def add_note(phrase, data):
     if phrase:
         print(phrase, data)
-        table.insert_one({"title": phrase, "data": data})
+        phrases.insert_one({"title": phrase, "data": data, 'repetitions': 0})
         return
 
     print('Rejected')
 
+
 def delete_request(title):
     if title:
-        table.remove({'title':title})
+        phrases.remove({'title': title})

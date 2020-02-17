@@ -51,7 +51,7 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/static/css" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -122,8 +122,23 @@
       <workItem from="1577872688513" duration="13623000" />
       <workItem from="1577947705784" duration="21365000" />
       <workItem from="1578032435846" duration="12850000" />
-      <workItem from="1578131724893" duration="2969000" />
+      <workItem from="1578131724893" duration="3632000" />
+      <workItem from="1578220194479" duration="546000" />
+      <workItem from="1578325894840" duration="1361000" />
+      <workItem from="1578327474870" duration="701000" />
+      <workItem from="1578411256667" duration="599000" />
+      <workItem from="1578559590421" duration="599000" />
+      <workItem from="1578675915373" duration="927000" />
+      <workItem from="1578728107357" duration="55000" />
     </task>
+    <task id="LOCAL-00001" summary="copy files - changes">
+      <created>1578134776583</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1578134776583</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -141,6 +156,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="copy files - changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="copy files - changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
