@@ -26,12 +26,15 @@ ScreenManagement:
             size_hint: 1.0, 0.3
             hint_text: "Enter A Word or A Phrase"
 
-        MDDropDownItem:
-            id: dropdown_item
-            items: app.items
-            dropdown_bg: [1, 1, 1, 1]
-            on_select:
-                root.change_language(dropdown_item.current_item)
+        FloatLayout:
+            size_hint: 1.0, 0.2
+            MDDropDownItem:
+                id: dropdown_item
+                items: app.items
+                dropdown_bg: [1, 1, 1, 1]
+                pos_hint: {'y':0.5, 'x':0.4}
+                on_select:
+                    root.change_language(dropdown_item.current_item)
 
 
 
@@ -42,6 +45,7 @@ ScreenManagement:
             background_color: 62 / 255.0, 204/ 255.0, 237/ 255.0, 1.0
             on_press:
                 root.find_phrase(phrase_field.text)
+                app.updateHistory()
 
         Widget:
 

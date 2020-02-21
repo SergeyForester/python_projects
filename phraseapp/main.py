@@ -100,9 +100,7 @@ class HistoryScreen(Screen):
         data = db.get_history()
 
         # cleaning list of history
-        for element in self.layout.children:
-            print('deleting load_history_list ->', element)
-            self.layout.remove_widget(element)
+        self.layout.clear_widgets()
 
         print('load_history_list 2')
 
@@ -113,47 +111,24 @@ class HistoryScreen(Screen):
                 btn = WrappedButton(text=f'{el["title"]} {"(completed)" if el["repetitions"] == 6 else ""}', size_hint_y=None,
                                     background_color=COLORS[str(el['repetitions'])],
                                     font_size=20, font_name='Arial',
-                                    on_release=partial(sound.pronounce, el['title']))
+                                    on_press=partial(sound.pronounce, el['title']))
                 print(COLORS[str(el['repetitions'])])
 
-                # self.dropdown = DropDown(size_hint=(0.7, None))
-                # self.dropdown.dismiss()
-                # for sentence in el['data']:
-                #     print(sentence)
-                #     self.dropdown.add_widget(WrappedButton(text=str(sentence), size_hint_y=None,
-                #                                            background_color=[252 / 225.0, 249 / 225.0, 240 / 255.0, 1.0],
-                #                                            size_hint=(0.7, None),
-                #                                            font_size=20, font_name='Arial',
-                #                                            on_press=partial(sound.pronounce, sentence)))
-                #
-                # btn.bind(on_release=partial(self.dropdown_open, btn, el['title']))
 
-                btn.bind(on_press=partial(self.search_phrase_from_history, el['title']))
+                btn.bind(on_release=partial(self.open_dropdown, el['title']))
 
                 self.layout.add_widget(btn)
                 self.layout.add_widget(MDIconButton(icon='delete',
                                                     on_press=partial(self.delete_from_history, el['title']),
                                                     size_hint=(0.25, None)))
-                # self.layout.add_widget(self.dropdown)
-
         else:
             self.layout.add_widget(Label(text='No results', color=[62 / 255.0, 204 / 255.0, 237 / 255.0, 1.0]))
 
-    def search_phrase_from_history(self, title, *args):
-        # pyperclip.copy(title)
-        # self.manager.current = 'main'
-        # MainWindowScreen().ids.phrase_field.paste()
-
+    def open_dropdown(self, title, *args):
         db.phrase_repetitions_increase(title)
+        self.load_history_list()
 
 
-    # def dropdown_open(self, widget, title, *args):
-    #     try:
-    #         print('dropdown', self.dropdown)
-    #         self.dropdown.open(widget)
-    #         db.phrase_repetitions_increase(title)
-    #     except Exception as err:
-    #         print('rec', err)
 
     def delete_from_history(self, title, *args):
         print(title)
@@ -179,9 +154,13 @@ class FindPhraseApp(MDApp):
         self.title = "Find Phrase App"
         super().__init__(**kwargs)
 
+    def updateHistory(self):
+        self.root.get_screen('history').load_history_list()
+
     def build(self):
         self.items = ['English', 'Spanish', 'German', 'Italian', 'Portuguese', 'French']
-        self.root = Builder.load_file("main.kv")
+        sm = Builder.load_file("main.kv")
+        return sm
 
 
 if __name__ == "__main__":
