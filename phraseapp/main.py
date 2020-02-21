@@ -27,13 +27,6 @@ from settings import *
 Window.clearcolor = (1, 1, 1, 1)
 
 
-def checkInternetConnection():
-    try:
-        requests.get('https://google.com')
-        return True
-    except:
-        return False
-
 class MainWindowScreen(Screen):
     def __init__(self, **kwargs):
         super(MainWindowScreen, self).__init__(**kwargs)
@@ -58,16 +51,15 @@ class MainWindowScreen(Screen):
 
         print(self.language_code)
 
-    def find_phrase(self, phrase):
+    def find_phrase(self, phrase, key='search'):
         print(phrase)
         if not phrase:
             return
 
         data = data_p.parse_phrase(phrase, self.language_code)
+        self.layout.clear_widgets()
 
         if len(data):
-            self.layout.clear_widgets()
-
             for el in data:
                 print(el)
                 btn = WrappedButton(text=str(el), size_hint_y=None,
@@ -79,7 +71,8 @@ class MainWindowScreen(Screen):
             for element in self.layout.children:
                 print(element)
 
-            db.add_note(phrase, data)  # add to db
+            if key == 'search':
+                db.add_note(phrase, data)  # add to db
             # HistoryScreen().load_history_list()  # and update the list of history
 
         else:
@@ -135,10 +128,9 @@ class HistoryScreen(Screen):
 
     def open_dropdown(self, title, *args):
         db.phrase_repetitions_increase(title)
-        if checkInternetConnection():
-            self.manager.current = 'main'
-            self.manager.get_screen('main').ids.phrase_field.text = title
-            self.manager.get_screen('main').find_phrase(title)
+        self.manager.current = 'main'
+        self.manager.get_screen('main').ids.phrase_field.text = title
+        self.manager.get_screen('main').find_phrase(title, 'redirect')
 
         self.load_history_list()
 
