@@ -1,6 +1,8 @@
+import urllib
 from functools import partial
 
 import pyperclip
+import requests
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.metrics import dp
@@ -24,6 +26,13 @@ from settings import *
 
 Window.clearcolor = (1, 1, 1, 1)
 
+
+def checkInternetConnection():
+    try:
+        requests.get('https://google.com')
+        return True
+    except:
+        return False
 
 class MainWindowScreen(Screen):
     def __init__(self, **kwargs):
@@ -126,6 +135,11 @@ class HistoryScreen(Screen):
 
     def open_dropdown(self, title, *args):
         db.phrase_repetitions_increase(title)
+        if checkInternetConnection():
+            self.manager.current = 'main'
+            self.manager.get_screen('main').ids.phrase_field.text = title
+            self.manager.get_screen('main').find_phrase(title)
+
         self.load_history_list()
 
 
@@ -153,6 +167,7 @@ class FindPhraseApp(MDApp):
     def __init__(self, **kwargs):
         self.title = "Find Phrase App"
         super().__init__(**kwargs)
+
 
     def updateHistory(self):
         self.root.get_screen('history').load_history_list()
