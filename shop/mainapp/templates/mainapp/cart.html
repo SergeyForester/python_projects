@@ -60,7 +60,7 @@
                 <li><a href="/">Главная</a></li>
 
                 {% for category in categories %}
-                    <li><a href="#">{{ category.name }}</a></li>
+                    <li><a href="{% url 'categories' category.id %}">{{ category.name }}</a></li>
                 {% endfor %}
                 <li><a href="{% url 'cart' %}">Корзина {{ total }}‎₽</a></li>
                 <li><a href="#">Контакты</a></li>
@@ -85,7 +85,8 @@
                                     </div>
                                     <div class="productPriceWrap">
                                         <div class="actualPrice">
-                                            {{ item.item.price }}
+                                            {{ item.item.price }}р/уп(10шт)
+
                                         </div>
                                         Кол-во: {{ item.quantity }}
                                         <form action="{% url 'changeOrderItemQ' %}" method="post">

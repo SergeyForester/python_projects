@@ -14,10 +14,13 @@ def main(request):
     top_products = Product.objects.all().order_by('-rating')[:6]
     sorts = Sort.objects.all()
 
-    order = Order.objects.get(user=request.session.session_key)
-    items = OrderItem.objects.filter(order=order)
-    total = sum([item.item.price * item.quantity for item in items])
-
+    try:
+        order = Order.objects.get(user=request.session.session_key)
+        items = OrderItem.objects.filter(order=order)
+        total = sum([item.item.price * item.quantity for item in items])
+    except Exception as err:
+        total = 0
+        print(err)
 
     lengths = []
     for product in Product.objects.all():
@@ -50,6 +53,7 @@ def cart_remove(request, id):
     OrderItem.objects.get(id=id).delete()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", '/'))
 
+
 def categories(request, category):
     categories = Category.objects.all()
     category = get_object_or_404(Category, id=category)
@@ -64,7 +68,7 @@ def cart(request):
         order = Order.objects.get(user=request.session.session_key)
         items = OrderItem.objects.filter(order=order)
         categories = Category.objects.all()
-        total = sum([item.item.price*item.quantity for item in items])
+        total = sum([item.item.price * item.quantity for item in items])
 
         content = {'items': items, 'order': order, 'categories': categories, 'total': total}
 
@@ -77,23 +81,29 @@ def cart(request):
 
 
 def add_to_cart(request):
-    order = Order.objects.filter(user=request.session.session_key).reverse()[:1][0]  # get the last order
-    if not order:
+    try:
+        order = Order.objects.filter(user=request.session.session_key).reverse()[:1][0]  # get the last order
+    except IndexError:
         order = Order.objects.create(user=request.session.session_key)
 
     print(request.POST['product'])
 
     order_item = OrderItem.objects.filter(order=order, item__id=request.POST['product'])[:1]
 
-    print(order_item)
-    if not order_item:
-        # create order item
-        order_item = OrderItem.objects.create(order=order,
-                                              quantity=int(request.POST.get('quantity', 1)),
-                                              item=Product.objects.get(id=int(request.POST['product'])))
-    else:
-        order_item = order_item[0]
-        order_item.quantity += int(request.POST.get('quantity', 1))
+    if (Product.objects.get(id=int(request.POST['product'])).quantity - int(request.POST.get('quantity', 1))) >= 0:
+        print(order_item)
+        if not order_item:
+            # create order item
+            order_item = OrderItem.objects.create(order=order,
+                                                  quantity=int(request.POST.get('quantity', 1)),
+                                                  item=Product.objects.get(id=int(request.POST['product'])))
+        else:
+            order_item = order_item[0]
+            order_item.quantity += int(request.POST.get('quantity', 1))
+
+        order_item.item.quantity -= int(request.POST.get('quantity', 1))
+        order_item.item.save()
+
         order_item.save()
 
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", '/'))

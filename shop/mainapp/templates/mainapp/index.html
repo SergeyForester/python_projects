@@ -137,7 +137,7 @@
                             <option value="{{ length }}">{{ length }}</option>
                         {% endfor %}
                     </select>
-                <button type="submit">Поиск</button>
+                    <button type="submit">Поиск</button>
                 </form>
             </div>
         </div>
@@ -157,7 +157,7 @@
                                 </div>
                                 <div class="productPriceWrap">
                                     <div class="actualPrice">
-                                        {{ product.price }}
+                                        {{ product.price }}‎р/уп(10шт)
                                     </div>
                                     <form action="{% url 'addToCart' %}" method="post">
                                         {% csrf_token %}
@@ -185,7 +185,12 @@
                                 </div>
                                 <div class="productPriceWrap">
                                     <div class="actualPrice">
-                                        {{ product.price }}
+                                        {{ product.price }}р
+                                        {% if product.category.name == "Вагонка" %}
+                                            /уп(10шт)
+                                        {% else %}
+                                            /мп
+                                        {% endif %}
                                     </div>
                                     <form action="{% url 'addToCart' %}" method="post">
                                         {% csrf_token %}

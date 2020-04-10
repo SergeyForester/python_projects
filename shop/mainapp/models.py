@@ -5,21 +5,21 @@ from django.db import models
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, verbose_name="Категория товаров")
+    name = models.CharField(max_length=50, unique=True, verbose_name="Категория товаров")
 
     def __str__(self):
         return self.name
 
 
 class Sort(models.Model):
-    name = models.CharField(max_length=50, verbose_name="Сорт продуктов")
+    name = models.CharField(max_length=50, unique=True, verbose_name="Сорт продуктов")
 
     def __str__(self):
         return self.name
 
 
 class Species(models.Model):
-    name = models.CharField(max_length=30, verbose_name="Порода дерева")
+    name = models.CharField(max_length=30, unique=True, verbose_name="Порода дерева")
 
     def __str__(self):
         return self.name
@@ -28,7 +28,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name="Наименование")
     price = models.DecimalField(verbose_name="Цена", decimal_places=2, max_digits=5)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория товара")
-    sort = models.ForeignKey(Sort, on_delete=models.CASCADE, verbose_name="Сорт")
+    sort = models.ForeignKey(Sort, on_delete=models.CASCADE, verbose_name="Сорт", null=True, blank=True)
     species = models.ForeignKey(Species, on_delete=models.CASCADE, verbose_name="Порода дерева")
     length = models.DecimalField(verbose_name="Длина", decimal_places=2, max_digits=3)
     quantity = models.PositiveIntegerField(verbose_name="Количество")
