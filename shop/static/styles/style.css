@@ -54,7 +54,7 @@ body {
 }
 .header {
   height: 700px;
-  background: url(../images/indexBack.jpg) center center;
+  background: url(../images/header.jpg) center center;
   background-size: cover;
 }
 @media all and (min-width: 0) and (max-width: 767px) {

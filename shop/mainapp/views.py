@@ -1,10 +1,12 @@
 import datetime
 
+import django
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 # Create your views here.
 import mainapp
+from mainapp import utils
 from mainapp.models import Category, Product, Order, OrderItem, Sort
 
 
@@ -13,6 +15,8 @@ def main(request):
     new_products = Product.objects.all().order_by('-date')[:3]
     top_products = Product.objects.all().order_by('-rating')[:6]
     sorts = Sort.objects.all()
+
+    utils.convert_filters()
 
     try:
         order = Order.objects.get(user=request.session.session_key)
@@ -29,28 +33,43 @@ def main(request):
 
     content = {'categories': categories, 'new_products': new_products,
                'top_products': top_products, 'sorts': sorts, 'lengths': lengths,
-               'total': total}
+               'total': total, "filter_data": utils.convert_filters()}
     return render(request, 'mainapp/index.html', content)
 
 
 def search(request):
     categories = Category.objects.all()
 
-    filters = {
-        key: value
-        for key, value in request.POST.items()
-        if value and key in ['category', 'sort', 'length']
-    }
+    # filters = {
+    #     key: value.split("-")[0]
+    #     for key, value in request.POST.items()
+    #     if value and key in ['category', 'sort', 'length']
+    # }
 
-    print(filters)
+    res = Product.objects.all()
+    data = request.POST
 
-    res = Product.objects.filter(**filters)
+    print(data)
+    for key, value in data.items():
+        if key == 'category' and data[key]:
+            res.filter(category=Category.objects.get(name=value))
+        if key == 'sort' and data[key]:
+            res.filter(sort=Sort.objects.get(name=value))
+        if key == 'length' and data[key]:
+            res.filter(length=value)
+
+
+    print(res)
+
 
     return render(request, 'mainapp/search.html', {'products': res, 'categories': categories})
 
 
 def cart_remove(request, id):
-    OrderItem.objects.get(id=id).delete()
+    order = OrderItem.objects.get(id=id)
+    order.item.quantity += order.quantity
+    order.item.save()
+    order.delete()
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", '/'))
 
 
@@ -81,10 +100,13 @@ def cart(request):
 
 
 def add_to_cart(request):
+    if not request.session.session_key:
+        request.session.save()
+    session_id = request.session.session_key
     try:
-        order = Order.objects.filter(user=request.session.session_key).reverse()[:1][0]  # get the last order
-    except IndexError:
-        order = Order.objects.create(user=request.session.session_key)
+        order = Order.objects.filter(user=session_id).reverse()[:1][0]  # get the last order
+    except:
+        order = Order.objects.create(user=session_id)
 
     print(request.POST['product'])
 
@@ -110,8 +132,16 @@ def add_to_cart(request):
 
 
 def changeOIQ(request):
+    print(request.POST['product'])
     item = get_object_or_404(OrderItem, id=request.POST['product'])
+
+    if item.quantity > int(request.POST['quantity']):  # ex. 7 -> 3 = +4
+        item.item.quantity += item.quantity - int(request.POST['quantity'])
+    else:  # ex. 13-> 14 = -1
+        item.item.quantity -= int(request.POST['quantity']) - item.quantity
+
     item.quantity = request.POST['quantity']
     item.save()
+    item.item.save()
 
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", '/'))
