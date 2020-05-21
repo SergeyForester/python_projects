@@ -1,13 +1,16 @@
-import datetime
+import uuid
 
-import django
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+import yandex_checkout
+from django.urls import reverse
 
-# Create your views here.
 import mainapp
 from mainapp import utils
 from mainapp.models import Category, Product, Order, OrderItem, Sort
+from yandex_checkout import Configuration, Payment
+
+Configuration.configure('707095', 'test_ZlfSv-xgCIBSKohaHNcifWgXrkaO3CTfEtt7sbj5FWk')
 
 
 def main(request):
@@ -19,8 +22,8 @@ def main(request):
     utils.convert_filters()
 
     try:
-        order = Order.objects.get(user=request.session.session_key)
-        items = OrderItem.objects.filter(order=order)
+        order = Order.objects.get(user=request.session.session_key, status=Order.PENDING)
+        items = OrderItem.objects.filter(order=order, order__status=Order.PENDING,)
         total = sum([item.item.price * item.quantity for item in items])
     except Exception as err:
         total = 0
@@ -58,9 +61,7 @@ def search(request):
         if key == 'length' and data[key]:
             res.filter(length=value)
 
-
     print(res)
-
 
     return render(request, 'mainapp/search.html', {'products': res, 'categories': categories})
 
@@ -84,8 +85,8 @@ def categories(request, category):
 
 def cart(request):
     try:
-        order = Order.objects.get(user=request.session.session_key)
-        items = OrderItem.objects.filter(order=order)
+        order = Order.objects.get(user=request.session.session_key, status=Order.PENDING)
+        items = OrderItem.objects.filter(order=order,  order__status=Order.PENDING,)
         categories = Category.objects.all()
         total = sum([item.item.price * item.quantity for item in items])
 
@@ -94,10 +95,71 @@ def cart(request):
     except mainapp.models.Order.DoesNotExist:
         content = {}
 
-    print(content)
+    if request.method == 'POST':
+        if request.POST.get('delivery-type', None) == 'card':
+            idempotence_key = str(uuid.uuid4())
+            payment = Payment.create({
+                "amount": {
+                    "value": float(total),
+                    "currency": "RUB"
+                },
+                "payment_method_data": {
+                    "type": "bank_card",
+                    "card": {
+                        "number": request.POST.get('card-number', None),
+                        "expiry_year": str(request.POST.get('expiry_year', None)),
+                        "expiry_month": str(request.POST.get('expiry_month', None)),
+                        "cardholder": request.POST.get('cardholder', None),
+                    },
+                },
+                "confirmation": {
+                    "type": "redirect",
+                    "return_url": "https://www.vagonka40.ru/"
+                },
+                "description": "Заказ в vagonka40.ru"
+            }, idempotence_key)
+
+            # get confirmation url
+            payment_id = payment.id
+
+            idempotence_key = str(uuid.uuid4())
+            response = Payment.capture(
+                payment_id,
+                {
+                    "amount": {
+                        "value": float(total),
+                        "currency": "RUB"
+                    }
+                },
+                idempotence_key
+            )
+
+            order.delivery_type = Order.CARD
+        else:
+            order.delivery_type = Order.PICKUP
+
+        order.email = request.POST['email']
+        order.name = request.POST['name']
+        order.phone = request.POST['phone']
+        order.status = Order.COMPLETED
+        order.save()
+        return HttpResponseRedirect(reverse('confirmation'))
 
     return render(request, 'mainapp/cart.html', content)
 
+def confirmation(request):
+    try:
+        order = Order.objects.get(user=request.session.session_key, status=Order.PENDING)
+        items = OrderItem.objects.filter(order=order,  order__status=Order.PENDING,)
+        categories = Category.objects.all()
+        total = sum([item.item.price * item.quantity for item in items])
+
+        content = {'items': items, 'order': order, 'categories': categories, 'total': total}
+
+    except mainapp.models.Order.DoesNotExist:
+        content = {}
+
+    return render(request, 'mainapp/purchase-confirmation.html', content)
 
 def add_to_cart(request):
     if not request.session.session_key:
@@ -110,7 +172,7 @@ def add_to_cart(request):
 
     print(request.POST['product'])
 
-    order_item = OrderItem.objects.filter(order=order, item__id=request.POST['product'])[:1]
+    order_item = OrderItem.objects.filter(order=order, order__status=Order.PENDING, item__id=request.POST['product'])[:1]
 
     if (Product.objects.get(id=int(request.POST['product'])).quantity - int(request.POST.get('quantity', 1))) >= 0:
         print(order_item)

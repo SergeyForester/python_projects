@@ -24,11 +24,7 @@ SECRET_KEY = '#gzjpmb9yobbkgm7#h&p%0-2ogn^rgapu9upf$hlne=h630f@-'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-if DEBUG:
-    ALLOWED_HOSTS = []
-
-else:
-    ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -122,6 +118,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'assets')
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -130,3 +128,6 @@ PRODUCT_FILTERS = {"Вагонка": [("АВ", "С"),
                    "Доска": [("1-2 сорт",), ("2.0,2.5,2.7,3.0,3.3,3.5",)],
                    "Рейка": [("1-2 сорт",), ("3.0",)],
                    "Плинтус": [("А",), ("2.5,3.0",)]}
+
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+

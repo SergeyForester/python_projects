@@ -41,10 +41,19 @@ class Product(models.Model):
 
 
 class Order(models.Model):
+    PENDING = 'В процессе'
+    COMPLETED = 'Завершен'
+
+    CARD = 'Карта'
+    PICKUP = 'Самовывоз'
+
+
     user = models.CharField(max_length=200)
     name = models.CharField(max_length=50)
     phone = models.CharField(max_length=30)
-    status = models.CharField(max_length=20, default="pending")
+    email = models.CharField(max_length=100)
+    status = models.CharField(max_length=20, default=PENDING)
+    delivery_type = models.CharField(max_length=20, default=PICKUP)
 
 
 class OrderItem(models.Model):

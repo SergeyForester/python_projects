@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path
 from mainapp import views as mainapp
 from django.conf import settings
@@ -28,9 +29,12 @@ urlpatterns = [
     path('addToCart/', mainapp.add_to_cart, name="addToCart"),
     path('search/', mainapp.search, name="search"),
     path('cartRemove/<int:id>/', mainapp.cart_remove, name="cart_remove"),
+    path('confirmation/', mainapp.confirmation, name="confirmation"),
     path('changeOrderIQ/', mainapp.changeOIQ, name="changeOrderItemQ")
 ]
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
+
+
