@@ -1,6 +1,7 @@
 import datetime
 import socket
 import sys
+import threading
 import time
 
 from PyQt5 import QtWidgets
@@ -20,7 +21,7 @@ class Client:
         # client's password
         self.password = password
 
-        # client's socket
+        # server's socket
         self.transport = None
 
         # client's contacts
@@ -36,6 +37,7 @@ class Client:
         self.ui.setupUi(dialog)
         self.setupMainUI()
         dialog.show()
+
         app.exec_()
 
     def setupMainUI(self):
@@ -63,6 +65,9 @@ class Client:
 
         # new contact
         self.ui.newContactBtn.clicked.connect(self.new_contact)
+
+        self.ui.contactsListWidget.itemDoubleClicked.connect(lambda x: self.changeChat(x))
+        self.ui.sendMessageBtn.clicked.connect(self.sendMessage)
 
     def init_connection(self):
         self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -94,6 +99,35 @@ class Client:
                 self.transport.close()
                 sys.exit()
 
+    def changeChat(self, chat):
+        try:
+            self.chat = chat.text()
+            print(chat.text())
+
+            self.ui.messagesListWidget.clear()
+
+            utils.send_message(self.transport, {"action": "get_messages", "contact": self.chat, "time": time.time(),
+                                                "username": self.username})
+            messages = utils.get_message(self.transport)
+
+            for message in messages['response']:
+                self.ui.messagesListWidget.addItem(f'{message["sender"]}\n{message["message_text"]}')
+        except Exception as e:
+            print(e)
+
+    def sendMessage(self):
+        print(self.chat)
+        textInput = self.ui.messageTextEdit
+        if self.chat and textInput.toPlainText():
+            utils.send_message(self.transport, {"action": "message", "time": time.time(), "username": self.username,
+                                                "message_text": textInput.toPlainText(), "to_user": self.chat})
+
+            data = utils.get_message(self.transport)
+            if data["code"] == 200:
+                self.ui.messagesListWidget.addItem(f"{self.username}\n{textInput.toPlainText()}")
+
+        textInput.clear()
+
     def new_contact(self):
         # get list of users
         try:
@@ -114,8 +148,28 @@ class Client:
             print(e)
 
 
+class ClientMessages(threading.Thread):
+    def __init__(self, transport, ui):
+        threading.Thread.__init__(self)
+        self.transport = transport
+        self.ui = ui
+
+    def run(self):
+        while 1:
+            try:
+                data = utils.get_message(self.transport)
+                print(data)
+                if data['action'] == 'message':
+                    print('Message')
+                    self.ui.messagesListWidget.addItem(f'{data["sender"]}\n{data["message_text"]}')
+
+            except KeyError:
+                print('Error')
+
+
 def main():
     client = Client(login.login, login.password)
+    client_messages = ClientMessages(client.transport, client.ui).start()
 
 
 if __name__ == '__main__':

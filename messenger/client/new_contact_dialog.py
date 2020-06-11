@@ -4,16 +4,14 @@ from PyQt5.QtWidgets import QDialog, QDialogButtonBox, QVBoxLayout, QComboBox, Q
 class NewContactDialog(QDialog):
     def __init__(self, users):
         super().__init__()
-        self.current = None
-        self.users = users
 
         self.setWindowTitle("New Contact")
-
-        print(self.users)
 
         self.users = QComboBox()
         self.users.addItems(users)
         self.users.currentTextChanged.connect(self.userSelected)
+
+        self.current = [self.users.itemText(i) for i in range(self.users.count())][0]
 
         self.addBtn = QPushButton()
         self.addBtn.setText('Add')

@@ -19,8 +19,6 @@ def main(request):
     top_products = Product.objects.all().order_by('-rating')[:6]
     sorts = Sort.objects.all()
 
-    utils.convert_filters()
-
     try:
         order = Order.objects.get(user=request.session.session_key, status=Order.PENDING)
         items = OrderItem.objects.filter(order=order, order__status=Order.PENDING,)

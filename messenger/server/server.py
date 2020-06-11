@@ -1,7 +1,8 @@
 import select
 import socket
 import time
-from messenger.server import utils, db
+# from server import utils, db
+from  server import utils, db
 
 
 class Server:
@@ -85,15 +86,33 @@ class Server:
             response = {'action': 'message', 'time': time.time(), 'from_user': message['username'],
                         'message_text': message['message_text']}
             # send message to user
-            utils.send_message(self.addresses[self.names[message['to_user']]], response)
+            try:
+                utils.send_message(self.addresses[self.names[message['to_user']]], response)
+            except Exception as err:
+                print(err)
+
+            db.create_message(message["username"], message["to_user"], message["message_text"], message["time"])
 
             utils.send_message(client, {'code': 200})
+
+        elif 'action' in message and message['action'] == 'get_messages' \
+                and 'time' in message and 'contact' in message and 'username' in message:
+            utils.send_message(client, {
+                "response": [{"sender": msg["sender"], "destination": msg["destination"], "time": msg["time"],
+                              "message_text": msg["message_text"]} for msg
+                             in db.get_messages(message["username"], message["contact"])]})
+
+            print({"response": [{"sender": msg["sender"], "destination": msg["destination"], "time": msg["time"],
+                              "message_text": msg["message_text"]} for msg
+                             in db.get_messages(message["username"], message["contact"])]})
+
 
         elif 'action' in message and message['action'] == 'get_contacts' \
                 and 'time' in message and 'username' in message:
             print(db.get_user_contacts(message['username']))
             utils.send_message(client, {'response': [{'username': contact['contact']} for contact in
                                                      db.get_user_contacts(message['username'])]})
+
 
         elif 'action' in message and message['action'] == 'create_contact' \
                 and 'time' in message and 'username' in message and 'contact' in message:

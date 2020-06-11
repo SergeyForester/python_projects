@@ -6,6 +6,7 @@ database = con['currency']
 
 users = database['users']
 contacts = database['contacts']
+messages = database['messages']
 
 
 def get_user(user):
@@ -18,6 +19,21 @@ def create_user(username, password):
 
 def create_contact(username, contact):
     contacts.insert_one({'contact': contact, 'user': username})
+
+
+def create_message(user, contact, text, time):
+    messages.insert_one({"sender": user, "destination": contact, "time": time, "message_text": text})
+
+
+def get_messages(user, contact):
+    data = []
+
+    for el in messages.find({"sender": user, "destination": contact}):
+        data.append(el)
+    for el in messages.find({"sender": contact, "destination": user}):
+        data.append(el)
+
+    return sorted(data, key=lambda i: i['time'])
 
 
 def get_users():

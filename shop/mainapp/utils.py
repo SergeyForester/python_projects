@@ -1,5 +1,4 @@
 # coding:utf-8
-import datetime
 
 import numpy
 from django.conf import settings
